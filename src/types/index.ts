@@ -72,8 +72,6 @@ export interface IOrder extends IOrderForm, IOrderContacts {
 export interface IOrderForm {
   payment: Payment;
   address: string;
-  email: string;
-  phone: string;
 }
 
 export interface IOrderContacts {

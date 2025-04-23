@@ -113,7 +113,7 @@ yarn build
 
 - `_catalog: IProduct[]` - каталог товаров магазина.
 - `_basket: IProduct[]` - товары, добавленные в корзину.
-- `_order: IOrder` - данные заказа.
+- `_order: Partial<IOrder>` - частичные данные заказа.
 - `_preview: string | null` - идентификатор просматриваемого товара.
 - `_formErrors: FormErrors` - объект для хранения ошибок валидации полей в формах.
 
@@ -124,7 +124,6 @@ yarn build
 - `setPreview(item: IProduct)` – установить просматриваемый товар.
 - `getPreview` – получить просматриваемый товар.
 - `addToBasket(item: IProduct)` – добавить товар в корзину.
-- `setBasketItems(basket: IProduct[])` - установить массив товаров в корзине.
 - `getBasketItems` – получить массив товаров в корзине.
 - `getBasketAmount` – получить количество товаров в корзине.
 - `getBasketTotal` – получить общую стоимость товаров в корзине.
@@ -132,7 +131,8 @@ yarn build
 - `deleteAllFromBasket` – удалить все товары из корзины.
 - `setOrderData(order: IOrder)`– установить данные заказа.
 - `resetOrderData` – сбросить данные заказа.
-- `getOrderData` - получить данные заказа.
+- `getOrderData(): Partial<IOrder>` - получить данные заказа.
+- `createOrderToPost(): IOrder` - сформировать полные данные заказа для отправки на сервер, на основе данных корзины и частичных данных заказа.
 - `setOrderField(field: keyof IOrderForm, value: string)` – установить способ оплаты и адрес.
 - `setContactsField(field: keyof IOrderContacts, value: string )` – установить почту и телефон.
 - `validateOrder` – отвалидировать данные формы с адресом и оплатой.
@@ -187,11 +187,11 @@ yarn build
 - `_button?: HTMLButtonElement` - DOM-элемент кнопки добавления товара в корзину.
 - `_index?: HTMLElement` - DOM-элемент для порядкового номера товара. 
 
-**Методы**:
+Для хранения данных о товаре предусмотрены **set-методы**:
 
-- `set id(value: string)` и `get id()`- устанавливает и возвращает идентификатор товара соответственно.
-- `set title(value: string)` и `get title()` - устанавливает и возвращает название товара соответственно.
-- `set price(value: number | null)` и `get price()` - устанавливает и возвращает стоимость товара соответственно.
+- `set id(value: string)` - устанавливает идентификатор товара.
+- `set title(value: string)` - устанавливает название товара.
+- `set price(value: number | null)` - устанавливает стоимость товара.
 - `set selected(value: boolean)` - меняет текст на кнопке товара, если товар добавлен в корзину.
 - `set image(value: string)` - устанавливает изображение товара.
 - `set category(value: Category)` - устанавливает категорию товара.
