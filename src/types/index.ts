@@ -96,3 +96,11 @@ export interface IModalData {
 export interface ISuccess {
   total: number;
 }
+
+export interface ICardActions {
+	onClick: (event: MouseEvent) => void;
+}
+
+export interface ISuccessActions {
+  onClick: (event: MouseEvent) => void;
+}
