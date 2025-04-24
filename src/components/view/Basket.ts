@@ -14,7 +14,7 @@ export class Basket extends Component<IBasket> {
     this._list = ensureElement<HTMLElement>('.basket__list', this.container);
     this._total = this.container.querySelector('.basket__price');
     this._button = this.container.querySelector('.basket__button');
-
+    this.setDisabled(this._button, true);
     if (this._button) {
       this._button.addEventListener('click', () => {
         events.emit('order:open');
@@ -23,7 +23,7 @@ export class Basket extends Component<IBasket> {
   }
 
   set items(items: HTMLElement[]) {
-    if (items.length) {
+    if (this._total) {
       this._list.replaceChildren(...items);
       this.setDisabled(this._button, false);
     } else {

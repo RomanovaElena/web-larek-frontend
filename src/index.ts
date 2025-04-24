@@ -17,11 +17,6 @@ import { IOrderContacts, IOrderForm, IOrderResult, IProduct } from './types';
 const events = new EventEmitter();
 const api = new WebLarekAPI(CDN_URL, API_URL);
 
-// Чтобы мониторить все события, для отладки-----------------------------------------------------
-events.onAll(({ eventName, data }) => {
-  console.log(eventName, data);
-})
-
 // Все шаблоны
 const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
 const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
@@ -99,7 +94,6 @@ events.on('preview:changed', (item: IProduct) => {
 // Товар добавлен в корзину 
 events.on('product:add', (item: IProduct) => {
   appData.addToBasket(item);
-  // page.counter = appData.getBasketAmount();
 })
 
 // Открыта корзина
@@ -129,8 +123,6 @@ events.on('basket:changed', () => {
   page.render({
     counter: appData.getBasketAmount(),
   })
-  // basket.total = appData.getBasketTotal();
-  // page.counter = appData.getBasketAmount();
 })
 
 // Товар удален из корзины
@@ -160,15 +152,6 @@ events.on(/^contacts\..*:change/, (data: { field: keyof IOrderContacts, value: s
   appData.setContactsField(data.field, data.value);
 });
 
-// Изменилось состояние валидации форм
-// events.on('formErrors:change', (errors: Partial<IOrderForm>) => { 
-//   const { payment, address, email, phone } = errors;
-//   order.valid = !payment && !address;
-//   contacts.valid = !email && !phone;
-//   order.errors = Object.values({payment, address}).filter(i => !!i).join('; ');
-//   contacts.errors = Object.values({email, phone}).filter(i => !!i).join('; ');
-// });
-
 // Изменилось состояние валидации формы заказа
 events.on('formErrors.order:change', (errors: Partial<IOrderForm>) => { 
   const { payment, address } = errors;
@@ -196,10 +179,6 @@ events.on('order:submit', () => {
 
 // Отправлена форма заказа с контактами
 events.on('contacts:submit', () => {
-  // appData.getOrderData().items = appData.getBasketItems()
-  //   .filter((item) => item.price != null)
-  //   .map((item) => item.id);
-  // appData.getOrderData().total = appData.getBasketTotal();
   api.orderProducts(appData.createOrderToPost())
   .then(res => {
     events.emit('order:success', res)
@@ -235,5 +214,4 @@ events.on('modal:close', () => {
 api.getProductList()
   .then(data => {
     appData.setCatalog(data);
-    console.log(data);
   })

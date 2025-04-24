@@ -140,12 +140,18 @@ export class AppState extends Model<IAppState> {
 
   // Отвалидировать данные формы с контактами
   validateContacts() {
+    const regexEmail = /\w+@\w+\.\w+/;
+    const regexPhone = /^((\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{10}$/;
     const errors: typeof this._formErrors = {};
     if (!this._order.email) {
       errors.email = 'Необходимо указать email';
+    } else if (!regexEmail.test(this._order.email)) {
+      errors.email = 'Некорректный адрес email';
     }
     if (!this._order.phone) {
       errors.phone = 'Необходимо указать телефон';
+    } else if (!regexPhone.test(this._order.phone)) {
+      errors.phone = 'Некорректный номер телефона';
     }
     this._formErrors = errors;
     this.events.emit('formErrors.contacts:change', this._formErrors);
