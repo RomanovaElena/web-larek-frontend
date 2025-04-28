@@ -136,8 +136,8 @@ events.on('order:open', () => {
     content: order.render({
       payment: appData.getOrderData().payment, 
       address: appData.getOrderData().address,
+      errors: Object.values(appData.getFormErrors()),
       valid: appData.validateOrder(),
-      errors:[],
     }),
   })
 })
@@ -158,6 +158,7 @@ events.on('formErrors.order:change', (errors: Partial<IOrderForm>) => {
   order.valid = !payment && !address;
   order.errors = Object.values({payment, address}).filter(i => !!i).join('; ');
 });
+
 // Изменилось состояние валидации формы контактов
 events.on('formErrors.contacts:change', (errors: Partial<IOrderContacts>) => { 
   const { email, phone } = errors;
@@ -171,17 +172,21 @@ events.on('order:submit', () => {
 		content: contacts.render({
 			email: appData.getOrderData().email,
 			phone: appData.getOrderData().phone,
+      errors: Object.values(appData.getFormErrors()),
 			valid: appData.validateContacts(),
-			errors: [],
 		}),
 	});
 });
 
-// Отправлена форма заказа с контактами
+// Отправлена форма заказа с контактами (заказ отправлен на сервер)
 events.on('contacts:submit', () => {
   api.orderProducts(appData.createOrderToPost())
   .then(res => {
-    events.emit('order:success', res)
+    modal.render({
+      content: success.render({
+        total: success.total, 
+      }),
+    });
     success.total = res.total;
     appData.deleteAllFromBasket();
     appData.resetOrderData();
@@ -190,15 +195,6 @@ events.on('contacts:submit', () => {
     console.log(err);
   })
 });
-
-// Заказ отправлен на сервер
-events.on('order:success', (res: IOrderResult) => {
-  modal.render({
-    content: success.render({
-      total: success.total, 
-    }),
-  });
-})
 
 // Блокируем прокрутку страницы если открыта модалка
 events.on('modal:open', () => {
