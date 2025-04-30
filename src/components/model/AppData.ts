@@ -98,16 +98,6 @@ export class AppState extends Model<IAppState> {
     return this._order;
   }
 
-  // Сформировать полные данные заказа для отправки на сервер
-  createOrderToPost(): IOrder {
-    const orderToPost = this.getOrderData();
-    orderToPost.items = this.getBasketItems()
-      .filter((item) => item.price != null)
-      .map((item) => item.id);
-    orderToPost.total = this.getBasketTotal();
-    return orderToPost as IOrder;
-  }
-
   // Установить способ оплаты и адрес
   setOrderField(field: keyof IOrderForm, value: string) {
     if (field === 'payment') {

@@ -12,7 +12,7 @@ import { Order } from './components/view/Order';
 import { Page } from './components/view/Page';
 import { Success } from './components/view/Success';
 import { Card } from './components/view/Card';
-import { IOrderContacts, IOrderForm, IOrderResult, IProduct } from './types';
+import { IOrder, IOrderContacts, IOrderForm, IOrderResult, IProduct } from './types';
 
 const events = new EventEmitter();
 const api = new WebLarekAPI(CDN_URL, API_URL);
@@ -178,9 +178,16 @@ events.on('order:submit', () => {
 	});
 });
 
-// Отправлена форма заказа с контактами (заказ отправлен на сервер)
+// Заказ отправлен на сервер
 events.on('contacts:submit', () => {
-  api.orderProducts(appData.createOrderToPost())
+  const orderToPost : IOrder = {
+    ... appData.getOrderData() as IOrder,
+    total: appData.getBasketTotal(),
+    items: appData.getBasketItems()
+      .filter((item) => item.price != null)
+      .map((item) => item.id),
+  }
+  api.orderProducts(orderToPost)
   .then(res => {
     modal.render({
       content: success.render({

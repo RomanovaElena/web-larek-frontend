@@ -132,7 +132,6 @@ yarn build
 - `setOrderData(order: IOrder)`– установить данные заказа.
 - `resetOrderData` – сбросить данные заказа.
 - `getOrderData(): Partial<IOrder>` - получить данные заказа.
-- `createOrderToPost(): IOrder` - сформировать полные данные заказа для отправки на сервер, на основе данных корзины и частичных данных заказа.
 - `setOrderField(field: keyof IOrderForm, value: string)` – установить способ оплаты и адрес.
 - `setContactsField(field: keyof IOrderContacts, value: string )` – установить почту и телефон.
 - `validateOrder` – отвалидировать данные формы с адресом и оплатой.
